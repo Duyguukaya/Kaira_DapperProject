@@ -1,0 +1,33 @@
+﻿
+@model IEnumerable<ResultCategoryDto>
+@{
+    ViewData["Title"] = "Index";
+    var count = 0;
+}
+
+<h3>Kategoriler</h3>
+
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>#</th>
+		<th>Kategori Adı</th>
+		<th>İşlemler</th>
+    </tr>
+    @foreach(var item in Model)
+    {
+
+        count++;
+        <tr>
+			<td>@count</td>
+			<td>@item.Name</td>
+            <td>
+                <a href="/Category/UpdateCategory/@item.CategoryId" class="btn btn-primary btn-sm">Düzenle</a>
+                <a href="/Category/DeleteCategory/@item.CategoryId" class="btn btn-danger btn-sm">Sil</a>
+			</td>
+        </tr>
+    }
+</table>
+
+<a href="/Category/AddCategory" class="btn btn-success">Yeni Kategori Ekle</a>
+
