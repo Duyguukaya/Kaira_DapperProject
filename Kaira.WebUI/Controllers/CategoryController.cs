@@ -1,6 +1,6 @@
-﻿using Kaira.WebUI.Repositories.CategoryRepositories;
+﻿using Kaira.WebUI.Dtos.CategoryDtos;
+using Kaira.WebUI.Repositories.CategoryRepositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Kaira.WebUI.Controllers
 {
@@ -11,5 +11,43 @@ namespace Kaira.WebUI.Controllers
             var categories = await _categoryRepository.GetAllAsync();
             return View(categories);
         }
+
+
+        public async Task<IActionResult> CreateCategory()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory(CreateCategoryDto categoryDto)
+        {
+            await _categoryRepository.CreateAsync(categoryDto);
+            return RedirectToAction("Index");
+        }
+
+
+        public async Task<IActionResult> UpdateCategory(int id)
+        {
+            var category = await _categoryRepository.GetByIdAsync(id);
+            return View(category);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCategory(UpdateCategoryDto categoryDto)
+        {
+            await _categoryRepository.UpdateAsync(categoryDto);
+            return RedirectToAction("Index");
+        }
+
+
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            await _categoryRepository.DeleteAsync(id);
+            return RedirectToAction("Index");
+
+        }
+
+
     }
 }

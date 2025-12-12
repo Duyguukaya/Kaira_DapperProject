@@ -1,11 +1,13 @@
 using Kaira.WebUI.Context;
 using Kaira.WebUI.Repositories.CategoryRepositories;
+using Kaira.WebUI.Repositories.ProductRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.AddScoped<AppDbContext>();
 

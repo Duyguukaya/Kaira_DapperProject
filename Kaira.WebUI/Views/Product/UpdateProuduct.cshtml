@@ -1,0 +1,31 @@
+﻿@model UpdateProductDto
+@{
+    ViewData["Title"] = "UpdateProuduct";
+}
+
+<h3>Ürün Güncelle</h3>
+
+<form method="post" class="form-group">
+    <input type="hidden" asp-for="ProductId" />
+    <label>Ürün Görseli</label>
+    <input type="text" asp-for="ImageUrl" class="form-control" placeholder="Kategori Resmi" />
+    <br />
+    <label>Ürün Adı</label>
+    <input type="text" asp-for="Name" class="form-control" placeholder="Kategori adı" />
+    <br />
+    <label>Açıklama</label>
+    <input type="text" asp-for="Description" class="form-control" placeholder="Açıklama" />
+    <br />
+    <label>Fiyat</label>
+    <input type="number" asp-for="Price" class="form-control" placeholder="Fiyatı" />
+    <br />
+    <br />
+    <label>Kategori</label>
+    <select asp-for="CategoryId" asp-items="@ViewBag.categories" class="form-control"></select>
+    <br />
+    <button class="btn btn-primary">Kaydet</button>
+</form>
+
+
+
+
