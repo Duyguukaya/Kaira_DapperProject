@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Kaira.WebUI.Repositories.CollectionRepositories;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Kaira.WebUI.ViewComponents
 {
-    public class _CollectionComponent : ViewComponent
+    public class _CollectionComponent(ICollectionRepository _collectionRepository) : ViewComponent
     {
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View();
+            var collection = await _collectionRepository.GetAllAsync();
+            return View(collection);
         }
     }
 }

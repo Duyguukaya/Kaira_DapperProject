@@ -1,20 +1,66 @@
-﻿
-@*
-   _NewslatterComponent
-*@
-
-<section class="newsletter bg-light" style="background: url(images/pattern-bg.png) no-repeat;">
+﻿<section class="newsletter bg-light" style="background: url(images/pattern-bg.png) no-repeat;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 py-5 my-5">
                 <div class="subscribe-header text-center pb-3">
-                    <h3 class="section-title text-uppercase">Sign Up for our newsletter</h3>
+                    <h3 class="section-title text-uppercase">Yapay Zeka Stilisti</h3>
+                    <p class="text-muted">Giymek istediğin parçayı yaz (örn: Mavi Kot Ceket), yapay zeka senin için en şık kombini hazırlasın.</p>
                 </div>
-                <form id="form" class="d-flex flex-wrap gap-2">
-                    <input type="text" name="email" placeholder="Your Email Addresss" class="form-control form-control-lg">
-                    <button class="btn btn-dark btn-lg text-uppercase w-100">Sign Up</button>
-                </form>
+
+                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                    <input type="text" id="txtProduct" placeholder="Hangi parçayı giymek istiyorsun?" class="form-control form-control-lg w-75">
+                    <button class="btn btn-dark btn-lg text-uppercase" id="btnGetCombine">Kombinle</button>
+                </div>
+
+                <div id="loadingArea" class="text-center mt-4 d-none">
+                    <div class="spinner-border text-dark" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Stilistin düşünüyor...</p>
+                </div>
+
+                <div id="resultArea" class="mt-4 p-4 bg-white rounded shadow-sm d-none text-center">
+                    <h5 class="text-uppercase fw-bold text-success mb-3">İşte Senin İçin Önerim:</h5>
+                    <p id="txtResultContent" class="fs-5" style="line-height: 1.6; color: #333;"></p>
+                </div>
+
             </div>
         </div>
     </div>
 </section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#btnGetCombine").click(function () {
+            var productText = $("#txtProduct").val();
+
+            if (productText.trim() === "") {
+                alert("Lütfen bir kıyafet parçası yazın!");
+                return;
+            }
+
+            // Tasarım ayarları
+            $("#loadingArea").removeClass("d-none"); // Yükleniyor göster
+            $("#resultArea").addClass("d-none");     // Sonucu gizle
+            $("#btnGetCombine").prop("disabled", true); // Butonu kilitle
+
+            $.ajax({
+                type: "POST",
+                url: "/AiFashion/GetOutfitSuggestion", // Backend'e gidecek adres
+                data: { product: productText },
+                success: function (response) {
+                    $("#loadingArea").addClass("d-none"); // Yükleniyor gizle
+                    $("#resultArea").removeClass("d-none"); // Sonucu göster
+                    $("#txtResultContent").html(response); // Gelen cevabı yaz
+                    $("#btnGetCombine").prop("disabled", false); // Butonu aç
+                },
+                error: function () {
+                    $("#loadingArea").addClass("d-none");
+                    alert("Yapay zeka şu an meşgul, lütfen tekrar deneyin.");
+                    $("#btnGetCombine").prop("disabled", false);
+                }
+            });
+        });
+    });
+</script>

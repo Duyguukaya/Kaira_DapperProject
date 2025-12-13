@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Kaira.WebUI.Repositories.MarkaRepositories;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Kaira.WebUI.ViewComponents
 {
-    public class _MarkaComponent:ViewComponent
+    public class _MarkaComponent(IMarkaRepository _markaRepository):ViewComponent
     {
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View();
+            var marka = await _markaRepository.GetAllAsync();
+            return View(marka);
         }
     }
 }

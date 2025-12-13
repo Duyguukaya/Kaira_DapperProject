@@ -1,21 +1,46 @@
-﻿
-@*
-    _VideoComponent
-*@
+﻿@using Kaira.WebUI.Dtos.VideoDtos
+@model ResultVideoDto
+
+@{
+
+    string finalUrl = "";
+
+    if (Model != null)
+    {
+        finalUrl = Model.Url;
+
+        if (!string.IsNullOrEmpty(finalUrl))
+        {
+
+            if (finalUrl.Contains("watch?v="))
+            {
+                finalUrl = finalUrl.Replace("watch?v=", "embed/");
+            }
+
+            if (finalUrl.Contains("&"))
+            {
+                finalUrl = finalUrl.Split('&')[0];
+            }
+        }
+    }
+}
+
 <section class="video py-5 overflow-hidden">
     <div class="container-fluid">
         <div class="row">
             <div class="video-content open-up" data-aos="zoom-out">
                 <div class="video-bg">
-                    <img src="~/kaira-1.0.0/images/video-image.jpg" alt="video" class="video-image img-fluid">
+                    <img src="@Model?.BackgroundImageUrl" alt="video cover" class="video-image img-fluid">
                 </div>
                 <div class="video-player">
-                    <a class="youtube" href="https://www.youtube.com/embed/pjtsGzQjFM4">
+
+                    <a class="youtube" href="@finalUrl">
                         <svg width="24" height="24" viewBox="0 0 24 24">
                             <use xlink:href="#play"></use>
                         </svg>
                         <img src="~/kaira-1.0.0/images/text-pattern.png" alt="pattern" class="text-rotate">
                     </a>
+
                 </div>
             </div>
         </div>

@@ -1,12 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Kaira.WebUI.Repositories.VideoRepositories;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Kaira.WebUI.ViewComponents
 {
-    public class _VideoComponent:ViewComponent
+    public class _VideoComponent(IVideoRepository _videoRepository) :ViewComponent
     {
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View();
+            var video = await _videoRepository.GetAllAsync();
+            var videos = video.FirstOrDefault();
+            return View(videos);
         }
     }
 }
