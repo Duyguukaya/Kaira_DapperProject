@@ -1,0 +1,35 @@
+﻿
+@model IEnumerable<ResultTestimonialDto>
+@{
+    ViewData["Title"] = "Index";
+    var count = 0;
+}
+
+<h3>Referanslar</h3>
+
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>#</th>
+        <th>Ad Soyad</th>
+        <th>Yorum</th>
+        <th>İşlemler</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+
+        count++;
+        <tr>
+            <td>@count</td>
+            <td>@item.NameSurname</td>
+            <td>@item.Comment</td>
+            <td>
+                <a href="/Testimoanial/UpdateTestimoanial/@item.TestimonialId" class="btn btn-primary btn-sm">Düzenle</a>
+                <a href="/Testimoanial/DeleteTestimoanial/@item.TestimonialId" class="btn btn-danger btn-sm">Sil</a>
+            </td>
+        </tr>
+    }
+</table>
+
+<a href="/Testimoanial/CreateTestimoanial" class="btn btn-success">Yeni Referans Ekle</a>
+
