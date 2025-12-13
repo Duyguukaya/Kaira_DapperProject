@@ -1,0 +1,33 @@
+﻿
+@model IEnumerable<ResultMarkaDto>
+@{
+    ViewData["Title"] = "Index";
+    var count = 0;
+}
+
+<h3>Markalar</h3>
+
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>#</th>
+        <th>Marka Görseli</th>
+        <th>İşlemler</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+
+        count++;
+        <tr>
+            <td>@count</td>
+            <td>@item.MarkaImg</td>
+            <td>
+                <a href="/Marka/UpdateMarka/@item.MarkaId" class="btn btn-primary btn-sm">Düzenle</a>
+                <a href="/Marka/DeleteMarka/@item.MarkaId" class="btn btn-danger btn-sm">Sil</a>
+            </td>
+        </tr>
+    }
+</table>
+
+<a href="/Marka/CreateMarka" class="btn btn-success">Yeni Marka Ekle</a>
+

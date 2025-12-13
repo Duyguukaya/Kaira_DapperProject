@@ -1,0 +1,14 @@
+﻿@model CreateMarkaDto
+@{
+    ViewData["Title"] = "CreateMarka";
+}
+
+<h3>Yeni Marka Oluştur</h3>
+
+<form method="post" class="form-group">
+    <label>Marka Görseli</label>
+    <input type="text" asp-for="MarkaImg" class="form-control"  />
+    <br />
+    <button class="btn btn-primary">Kaydet</button>
+</form>
+
