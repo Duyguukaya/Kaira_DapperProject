@@ -4,6 +4,7 @@ using Kaira.WebUI.Repositories.CollectionRepositories;
 using Kaira.WebUI.Repositories.MarkaRepositories;
 using Kaira.WebUI.Repositories.ProductRepositories;
 using Kaira.WebUI.Repositories.TestimonialRepositories;
+using Kaira.WebUI.Repositories.VideoRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
 builder.Services.AddScoped<IMarkaRepository, MarkaRepository>();
 builder.Services.AddScoped<ITestimonialRepository, TestimonialRepository>();
+builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 
 builder.Services.AddScoped<AppDbContext>();
 
