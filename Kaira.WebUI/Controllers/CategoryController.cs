@@ -1,9 +1,11 @@
 ﻿using Kaira.WebUI.Dtos.CategoryDtos;
 using Kaira.WebUI.Repositories.CategoryRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kaira.WebUI.Controllers
 {
+    [Authorize]
     public class CategoryController(ICategoryRepository _categoryRepository) : Controller
     {
         public async Task<IActionResult> Index()

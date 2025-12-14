@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Net.Http.Headers; // OpenAI için gerekli başlık kütüphanesi
 
 namespace Kaira.WebUI.Controllers
 {
@@ -9,50 +12,74 @@ namespace Kaira.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> GetOutfitSuggestion(string product)
         {
-            // 1. OpenAI API Anahtarın (Burayı appsettings.json'dan çekmek daha güvenlidir)
-            var apiKey = "sk-proj-Senin-Api-Keyin-Buraya-Gelecek";
+            // ---------------------------------------------------------
+            // 1. OpenAI API Key ("sk-" ile başlayan kodu buraya yapıştır)
+            string apiKey = "senin api keyin";
+            // ---------------------------------------------------------
 
-            // 2. Yapay Zekaya Gönderilecek Prompt (Komut)
-            var prompt = $"Kullanıcı şu kıyafet parçasına sahip: '{product}'. " +
-                         $"Sen profesyonel bir moda danışmanısın. " +
-                         $"Bu parça ile giyilebilecek, renk uyumu harika olan, ayakkabı ve aksesuar dahil " +
-                         $"kısa, net ve maddeler halinde şık bir kombin önerisi yap. " +
-                         $"Cevabın Türkçe olsun ve samimi bir dil kullan.";
+            if (string.IsNullOrEmpty(apiKey) || apiKey.Contains("sk-..."))
+            {
+                return Content("HATA: OpenAI API Key girilmemiş! Lütfen Controller dosyasını düzenleyin.");
+            }
 
-            // 3. API İsteği Hazırlığı
+            // OpenAI API Endpoint Adresi
+            string url = "https://api.openai.com/v1/chat/completions";
+
+            // Prompt Hazırlığı
+            var promptText = $"Sen bir moda uzmanısın. Kullanıcı '{product}' giymek istiyor. " +
+                             $"Bu parça ile uyumlu ayakkabı, çanta ve aksesuarları içeren harika bir kombin önerisi yap. " +
+                             $"Cevabı HTML formatında verme, sadece düz metin olarak, maddeler halinde ve samimi bir dille yaz.";
+
+            // OpenAI İstek Formatı (Model ve Mesajlar)
+            var requestBody = new
+            {
+                model = "gpt-3.5-turbo", // İstersen "gpt-4" veya "gpt-4o" yapabilirsin (Daha maliyetli olabilir)
+                messages = new[]
+                {
+                    new { role = "system", content = "Sen yardımcı bir moda asistanısın." },
+                    new { role = "user", content = promptText }
+                },
+                temperature = 0.7 // Yaratıcılık seviyesi
+            };
+
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
-
-                var requestBody = new
-                {
-                    model = "gpt-3.5-turbo", // veya "gpt-4"
-                    messages = new[]
-                    {
-                        new { role = "system", content = "Sen yardımsever bir moda asistanısın." },
-                        new { role = "user", content = prompt }
-                    },
-                    max_tokens = 300
-                };
+                // OpenAI Yetkilendirme (Header'a eklenmeli)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
 
                 var jsonContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
 
-                // 4. API'ye İstek At
-                var response = await client.PostAsync("https://api.openai.com/v1/chat/completions", jsonContent);
-
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    dynamic result = JsonConvert.DeserializeObject(responseString);
-                    string content = result.choices[0].message.content;
+                    var response = await client.PostAsync(url, jsonContent);
 
-                    // Cevaptaki yeni satırları HTML <br> etiketiyle değiştir ki düzgün gözüksün
-                    return Content(content.Replace("\n", "<br/>"));
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        dynamic result = JsonConvert.DeserializeObject(responseString);
+
+                        // OpenAI Cevap Yolu: choices[0].message.content
+                        string content = result?.choices?[0]?.message?.content;
+
+                        if (string.IsNullOrEmpty(content))
+                        {
+                            return Content("Yapay zeka boş bir cevap döndürdü.");
+                        }
+
+                        // Satır başlarını HTML <br> ile değiştirip gönder
+                        return Content(content.Replace("\n", "<br/>"));
+                    }
+                    else
+                    {
+                        var errorDetails = await response.Content.ReadAsStringAsync();
+                        return Content($"HATA OLUŞTU! (OpenAI)<br>Durum Kodu: {response.StatusCode}<br>Detay: {errorDetails}");
+                    }
                 }
-                else
+                catch (System.Exception ex)
                 {
-                    return Content("Üzgünüm, şu an moda sunucularına erişemiyorum. Lütfen biraz sonra tekrar dene.");
+                    return Content($"SİSTEM HATASI: {ex.Message}");
                 }
-            
+            }
         }
+    }
 }

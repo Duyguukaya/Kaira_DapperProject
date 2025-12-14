@@ -1,10 +1,12 @@
 ﻿using Kaira.WebUI.Dtos.CategoryDtos;
 using Kaira.WebUI.Dtos.CollectionDtos;
 using Kaira.WebUI.Repositories.CollectionRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kaira.WebUI.Controllers
 {
+    [Authorize]
     public class CollectionController(ICollectionRepository _collectionRepository) : Controller
     {
         public async Task<IActionResult> Index()

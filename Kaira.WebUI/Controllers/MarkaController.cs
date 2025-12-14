@@ -1,9 +1,11 @@
 ﻿using Kaira.WebUI.Dtos.MarkaDtos;
 using Kaira.WebUI.Repositories.MarkaRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kaira.WebUI.Controllers
 {
+    [Authorize]
     public class MarkaController(IMarkaRepository _markaRepository) : Controller
     {
         public async Task<IActionResult> Index()

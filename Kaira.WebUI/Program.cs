@@ -5,10 +5,12 @@ using Kaira.WebUI.Repositories.MarkaRepositories;
 using Kaira.WebUI.Repositories.ProductRepositories;
 using Kaira.WebUI.Repositories.TestimonialRepositories;
 using Kaira.WebUI.Repositories.VideoRepositories;
+using Microsoft.AspNetCore.Authentication.Cookies; 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -18,6 +20,15 @@ builder.Services.AddScoped<ITestimonialRepository, TestimonialRepository>();
 builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 
 builder.Services.AddScoped<AppDbContext>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/Index"; 
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20); 
+        options.SlidingExpiration = true; 
+        options.AccessDeniedPath = "/Login/Index"; 
+    });
 
 builder.Services.AddControllersWithViews();
 
@@ -32,9 +43,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseAuthentication(); 
+app.UseAuthorization();  
 
 app.MapStaticAssets();
 
@@ -42,6 +56,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

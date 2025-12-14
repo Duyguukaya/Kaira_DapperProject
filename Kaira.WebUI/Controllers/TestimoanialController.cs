@@ -1,10 +1,12 @@
 ﻿using Kaira.WebUI.Dtos.CategoryDtos;
 using Kaira.WebUI.Dtos.TestimonialDtos;
 using Kaira.WebUI.Repositories.TestimonialRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kaira.WebUI.Controllers
 {
+    [Authorize]
     public class TestimoanialController(ITestimonialRepository _testimonialRepository) : Controller
     {
         public async Task<IActionResult> Index()

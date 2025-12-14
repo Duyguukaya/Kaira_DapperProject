@@ -1,9 +1,11 @@
 ﻿using Kaira.WebUI.Dtos.VideoDtos;
 using Kaira.WebUI.Repositories.VideoRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kaira.WebUI.Controllers
 {
+    [Authorize]
     public class VideoController(IVideoRepository _videoRepository) : Controller
     {
         public async Task<IActionResult> Index()

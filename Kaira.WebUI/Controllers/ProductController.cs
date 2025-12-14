@@ -1,12 +1,14 @@
 ﻿using Kaira.WebUI.Dtos.ProductDtos;
 using Kaira.WebUI.Repositories.CategoryRepositories;
 using Kaira.WebUI.Repositories.ProductRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 
 namespace Kaira.WebUI.Controllers
 {
+    [Authorize]
     public class ProductController(IProductRepository _productRepository,ICategoryRepository _categoryRepository) : Controller
     {
         private async Task GetCategoriesAsync()
